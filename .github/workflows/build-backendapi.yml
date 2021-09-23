@@ -58,6 +58,7 @@ jobs:
         context: ./backapi/
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        file: ./backapi/Dockerfile.distroless
         push: ${{ github.event_name != 'pull_request' }}
         
     - name: Image digest
