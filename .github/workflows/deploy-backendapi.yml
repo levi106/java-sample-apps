@@ -28,8 +28,16 @@ jobs:
     - name: Create secret
       uses: azure/k8s-create-secret@v1
       with:
-        connectionstring: ${{ secrets.AI_CONNECTION_STRING }}
+        secret-type: 'generic'
+        arguments: --from-literal=connectionstring=${{ secrets.AI_CONNECTION_STRING }}
         secret-name: ${{ env.SECRET }}
         namespace: ${{ env.NAMESPACE }}
         force: true
         
+    - name: Deploy Backend API
+      uses: azure/k8s-deploy@v1
+      with:
+        manifests: |
+          manifests/backapi/deployment.yaml
+        namespace: ${{ env.NAMESPACE }}
+      
