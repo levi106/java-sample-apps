@@ -1,0 +1,35 @@
+name: DeployBackendAPI
+
+on:
+  workflow_dispatch:
+
+env:
+  NAMESPACE: dev
+  SECRET: ai
+
+jobs:
+  deploy-backend-api:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set k8s context
+      uses: azure/k8s-set-context@v1
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG }}
+    
+    - name: Create namespace if does not exist
+      run: |
+        kubectl create namespace ${{ env.NAMESPACE }} --dry-run -o json | kubectl apply -f -
+        
+    - name: Create secret
+      uses: azure/k8s-create-secret@v1
+      with:
+        connectionstring: ${{ secrets.AI_CONNECTION_STRING }}
+        secret-name: ${{ env.SECRET }}
+        namespace: ${{ env.NAMESPACE }}
+        force: true
+        
