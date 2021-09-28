@@ -18,7 +18,7 @@ public class ReactorController {
 
     @RequestMapping("/{id}")
     public Mono<String> get(@PathVariable Integer id, @RequestHeader Map<String, String> headers) {
-        headers.forEach((k, v) -> LOGGER.info("{'name':'{}', 'value':'{}'}", k, v));
+        headers.forEach((k, v) -> LOGGER.info("{\"name\":\"{}\", \"value\":\"{}\"}", k, v));
         return Mono.just(id)
             .map(x -> {
                 LOGGER.info("Thread # {}: map", Thread.currentThread().getId());
