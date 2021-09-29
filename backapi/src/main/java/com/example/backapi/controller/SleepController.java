@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,8 @@ public class SleepController {
     private final SimpleDateFormat DF = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
     @RequestMapping("/{millis}")
-    public Mono<String> get(@PathVariable Integer millis) {
+    public Mono<String> get(@PathVariable Integer millis, @RequestHeader Map<String, String> headers) {
+        headers.forEach((k, v) -> LOGGER.info("{\"name\":\"{}\", \"value\":\"{}\"}", k, v));
         StopWatch sw = new StopWatch();
         LOGGER.info("Thread # {}: start {}", Thread.currentThread().getId(), DF.format(Date.from(Instant.now())));
         sw.start();

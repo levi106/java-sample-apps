@@ -18,7 +18,7 @@ spec:
         app: backapi
     spec:
       containers:
-      - image: ghcr.io/levi106/backapi:0.0.3-distroless
+      - image: ghcr.io/levi106/backapi:0.0.4-distroless
         name: backapi
         env:
         - name: APPLICATIONINSIGHTS_CONNECTION_STRING
