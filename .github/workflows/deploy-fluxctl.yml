@@ -1,0 +1,41 @@
+name: DeployFluxctl
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-fluxctl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set k8s context
+        uses: azure/k8s-set-context@v1
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Setup fluxctl
+        uses: fluxcd/fluxctl-action@master
+        
+      - name: Install Flux
+        run: |
+          kubectl create ns flux
+          fluxctl install \
+          --git-path=manifests \
+          --git-branche=main \
+          --git-readonly=true \
+          --registry-disable-scanning=true \
+          --git-email=16788901+levi106@users.noreply.github.com \
+          --git-url=https://github.com/levi106/java-sample-apps.git \
+          --namespace=flux | kubectl apply -f -
+      
+      - name: Verify install
+        run: kubectl -n flux rollout status deploy/flux --timeout=1m
+        
+      - name: Sync git with cluster
+        env:
+          FLUX_FORWARD_NAMESPACE: flux
+        run: fluxctl sync
