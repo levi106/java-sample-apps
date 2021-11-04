@@ -23,18 +23,19 @@ jobs:
           kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Setup fluxctl
-        uses: fluxcd/fluxctl-action@master
+        run: |
+          brew install fluxcd/tap/flux
         
       - name: Install Flux
         run: |
-          fluxctl bootstrap github \
+          flux bootstrap github \
           --context=production \
           --owner=${{ env.GITHUB_USER }}
           --repository=${{ env.GITHUB_REPO }}
           --branch=main \
           --path=clusters/production \
           --personal \
-          --namespace=${{ env.NAMESPACE }} | kubectl apply -f -
+          --namespace=${{ env.NAMESPACE }}
       
       - name: Verify install
         run: kubectl -n ${{ env.NAMESPACE }} rollout status deploy/flux --timeout=1m
