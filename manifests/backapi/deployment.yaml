@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: backapi
   name: backapi
@@ -13,7 +12,6 @@ spec:
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: backapi
     spec:
@@ -33,22 +31,3 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "500m"
-status: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: backapi
-  name: backapi
-  annotations:
-    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 8080
-  selector:
-    app: backapi
-  type: LoadBalancer
-  loadBalancerIP: 192.168.2.254

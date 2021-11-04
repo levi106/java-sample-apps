@@ -4,7 +4,9 @@ on:
   workflow_dispatch:
 
 env:
-  NAMESPACE: flux
+  NAMESPACE: flux-system
+  GITHUB_REPO: java-sample-apps
+  GITHUB_USER: levi106
 
 jobs:
   deploy-fluxctl:
@@ -23,25 +25,16 @@ jobs:
       - name: Setup fluxctl
         uses: fluxcd/fluxctl-action@master
         
-      - name: Create namespace if does not exist
-        run: |
-          kubectl create namespace ${{ env.NAMESPACE }} --dry-run -o json | kubectl apply -f -
-        
       - name: Install Flux
         run: |
-          fluxctl install \
-          --git-path=manifests \
-          --git-branch=main \
-          --git-readonly=true \
-          --registry-disable-scanning=true \
-          --git-email=16788901+levi106@users.noreply.github.com \
-          --git-url=https://github.com/levi106/java-sample-apps.git \
+          flux bootstrap github \
+          --context=production \
+          --owner=${{ env.GITHUB_USER }}
+          --repository=${{ env.GITHUB_REPO }}
+          --branch=main \
+          --path=clusters/production \
+          --personal \
           --namespace=${{ env.NAMESPACE }} | kubectl apply -f -
       
       - name: Verify install
         run: kubectl -n ${{ env.NAMESPACE }} rollout status deploy/flux --timeout=1m
-        
-      - name: Sync git with cluster
-        env:
-          FLUX_FORWARD_NAMESPACE: flux
-        run: fluxctl sync
