@@ -7,12 +7,12 @@ on:
     tags:
     - 'v*'
     paths:
-    - 'backapi/**'
+    - 'src/backapi/**'
   pull_request:
     branches:
     - 'main'
     paths:
-    - 'backapi/**'
+    - 'src/backapi/**'
   workflow_dispatch:
 
 env:
@@ -55,10 +55,10 @@ jobs:
       id: docker_build
       uses: docker/build-push-action@v2
       with:
-        context: ./backapi/
+        context: ./src/backapi/
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        file: ./backapi/Dockerfile.distroless
+        file: ./src/backapi/Dockerfile.distroless
         push: ${{ github.event_name != 'pull_request' }}
         
     - name: Image digest
