@@ -4,6 +4,7 @@ metadata:
   labels:
     app: backapi
   name: backapi
+  namespace: prod
 spec:
   replicas: 1
   selector:
