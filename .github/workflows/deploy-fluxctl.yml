@@ -27,7 +27,7 @@ jobs:
         
       - name: Install Flux
         run: |
-          flux bootstrap github \
+          fluxctl bootstrap github \
           --context=production \
           --owner=${{ env.GITHUB_USER }}
           --repository=${{ env.GITHUB_REPO }}
