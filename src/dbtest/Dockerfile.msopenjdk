@@ -11,4 +11,8 @@ EXPOSE 8080
 WORKDIR /app
 COPY --from=builder /home/gradle/src/applicationinsights-agent-3.1.1.jar ./applicationinsights-agent-3.1.1.jar
 COPY --from=builder /home/gradle/src/build/libs/*.jar ./app.jar
+ENV HIKARI_CONNECTION_TIMEOUT=5000 \
+    HIKARI_IDLE_TIMEOUT=30000 \
+    HIKARI_MINIMUM_IDLE=0 \
+    HIKARI_MAXIMUM_POOL_SIZE=5
 ENTRYPOINT ["java", "-Xmx128M", "-XX:+FlightRecorder", "-XX:+PrintFlagsFinal", "-javaagent:/app/applicationinsights-agent-3.1.1.jar", "-jar", "app.jar"]
