@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dbtest
+  name: dbtest
+  namespace: dbtest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbtest
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: dbtest
+    spec:
+      containers:
+      - image: ghcr.io/levi106/dbtest:0.0.5-ms
+        name: dbtest
+        env:
+        - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: ai
+              key: connectionstring
+        - name: AZ_SERVER_NAME
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: serverName
+        - name: AZ_DATABASE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: databaseName
+        - name: AZ_SQL_SERVER_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: userName
+        - name: AZ_SQL_SERVER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db
+              key: password
+        resources: 
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
