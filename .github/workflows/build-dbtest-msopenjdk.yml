@@ -58,7 +58,7 @@ jobs:
         context: ./src/dbtest/
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        file: ./src/dbtest/Dockerfile.distroless
+        file: ./src/dbtest/Dockerfile.msopenjdk
         push: ${{ github.event_name != 'pull_request' }}
         
     - name: Image digest

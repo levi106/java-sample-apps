@@ -4,7 +4,7 @@ metadata:
   labels:
     app: dbtest
   name: dbtest
-  namespace: dbtest
+  namespace: dev
 spec:
   replicas: 1
   selector:
@@ -17,7 +17,7 @@ spec:
         app: dbtest
     spec:
       containers:
-      - image: ghcr.io/levi106/dbtest:0.0.5-ms
+      - image: ghcr.io/levi106/dbtest:0.0.6-ms
         name: dbtest
         env:
         - name: APPLICATIONINSIGHTS_CONNECTION_STRING
@@ -47,8 +47,8 @@ spec:
               key: password
         resources: 
           requests:
-            memory: "512Mi"
-            cpu: "500m"
+            memory: "32Mi"
+            cpu: "100m"
           limits:
             memory: "512Mi"
             cpu: "500m"
