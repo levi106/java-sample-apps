@@ -1,4 +1,4 @@
-name: BuildDbTest
+name: BuildJdbcTest
 
 on:
   push:
