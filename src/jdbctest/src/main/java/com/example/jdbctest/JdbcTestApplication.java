@@ -45,6 +45,8 @@ public class JdbcTestApplication implements CommandLineRunner {
 			con.close();
 		}
 		catch (SQLException e) {
+			appLogger.warning(e.getMessage());
+			appLogger.warning(e.getSQLState());
 			e.printStackTrace();
 		}
 	}
@@ -64,6 +66,8 @@ public class JdbcTestApplication implements CommandLineRunner {
 			con.close();
 		}
 		catch (SQLException e) {
+			appLogger.warning(e.getMessage());
+			appLogger.warning(e.getSQLState());
 			e.printStackTrace();
 		}
 	}
