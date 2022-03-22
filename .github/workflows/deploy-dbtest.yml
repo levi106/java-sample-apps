@@ -1,0 +1,53 @@
+name: DeployDbTest
+
+on:
+  workflow_dispatch:
+
+env:
+  NAMESPACE: dev
+  AI_SECRET: ai
+  DB_SECRET: db
+
+jobs:
+  deploy-dbtest:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set k8s context
+      uses: azure/k8s-set-context@v1
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBECONFIG }}
+    
+    - name: Create namespace if does not exist
+      run: |
+        kubectl create namespace ${{ env.NAMESPACE }} --dry-run -o json | kubectl apply -f -
+        
+    - name: Create secret for AI
+      uses: azure/k8s-create-secret@v1
+      with:
+        secret-type: 'generic'
+        arguments: --from-literal=connectionstring=${{ secrets.AI_CONNECTION_STRING }}
+        secret-name: ${{ env.AI_SECRET }}
+        namespace: ${{ env.NAMESPACE }}
+        force: true
+
+    - name: Create secret for DB
+      uses: azure/k8s-create-secret@v1
+      with:
+        secret-type: 'generic'
+        arguments: --from-literal=serverName=${{ secrets.SQL_SERVER_NAME }} --from-literal=databaseName=${{ secrets.SQL_DATABASE_NAME }} --from-literal=userName=${{ secrets.SQL_USER_NAME }} --from-literal=password=${{ secrets.SQL_PASSWORD }}
+        secret-name: ${{ env.DB_SECRET }}
+        namespace: ${{ env.NAMESPACE }}
+        force: true
+        
+    - name: Deploy Backend API
+      uses: azure/k8s-deploy@v1
+      with:
+        manifests: |
+          manifests/dbtest/deployment.yaml
+        namespace: ${{ env.NAMESPACE }}
+      
