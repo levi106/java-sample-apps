@@ -33,9 +33,16 @@ public class LineseparatorApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		String separator1 = System.lineSeparator();
-		LOG.info("{}", convertStringToHexString(separator1));
-		String separator2 = System.getProperty("line.separator");
-		LOG.info("{}", convertStringToHexString(separator2));
+		while (true) {
+			String separator1 = System.lineSeparator();
+			LOG.info("{}", convertStringToHexString(separator1));
+			String separator2 = System.getProperty("line.separator");
+			LOG.info("{}", convertStringToHexString(separator2));
+            try {
+			  Thread.sleep(10000);
+            } catch (InterruptedException ex) {
+              break;
+            }
+		}
 	}
 }
